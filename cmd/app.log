@@ -20,3 +20,11 @@ LOG: 2025/01/24 09:32:51 di.go:35: Starting Blog API Server...
 LOG: 2025/01/24 09:32:51 di.go:37: Database connected successfully.
 LOG: 2025/01/24 09:33:01 di.go:39: Request: GET /api/v1/blog-post
 LOG: 2025/01/24 09:35:05 di.go:39: Request: POST /api/v1/blog-post
+LOG: 2025/01/24 10:35:41 di.go:35: Starting Blog API Server...
+LOG: 2025/01/24 10:35:41 di.go:37: Database connected successfully.
+LOG: 2025/01/24 10:36:11 di.go:39: Request: GET /swagger/index.html
+LOG: 2025/01/24 10:36:11 di.go:39: Request: GET /swagger/swagger-ui.css
+LOG: 2025/01/24 10:36:11 di.go:39: Request: GET /swagger/swagger-ui-standalone-preset.js
+LOG: 2025/01/24 10:36:11 di.go:39: Request: GET /swagger/swagger-ui-bundle.js
+LOG: 2025/01/24 10:36:11 di.go:39: Request: GET /swagger/doc.json
+LOG: 2025/01/24 10:36:21 di.go:39: Request: GET /api/v1/blog-post
