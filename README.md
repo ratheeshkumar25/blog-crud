@@ -34,12 +34,8 @@ go mod tidy
 2. Configure Database
 You need to set up a PostgreSQL database for the application. Create a new PostgreSQL database named crud_app. Update the database connection settings in the .env file with your database credentials:
 
+DATABASE_URL=postgresql://<your-database-connection-url>
 
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=your-db-user
-DB_PASSWORD=your-db-password
-DB_NAME=crud_app
 Make sure your PostgreSQL server is running locally, or modify the settings to point to a remote PostgreSQL instance.
 
 3. Run the Application Locally
@@ -52,31 +48,15 @@ This will start the server on http://localhost:8080.
 4. Access Swagger Documentation
 After the application starts, navigate to http://localhost:8080/swagger in your browser to view the Swagger UI, where you can test the CRUD APIs and view detailed API documentation.
 
-Docker Setup (Optional)
-If you prefer to run the application with Docker, follow these steps:
-
-Build the Docker image:
-
-First, ensure that your Dockerfile is set up correctly. Then, build the Docker image using the following command:
-
-docker build -t crud-app .
-Run the container:
-
-Run the Docker container with the following command, ensuring you pass the .env file for database configuration:
-
-docker run -p 8080:8080 --env-file .env crud-app
-This will run the app inside a Docker container and expose the app on http://localhost:8080.
-
-Testing the API
-Once the application is up and running, you can use the Swagger UI to test the API endpoints.
-
+5.Testing the API
+Swagger UI to test the API endpoints.
 Available Endpoints
-POST /posts: Create a new blog post.
-GET /posts: Get all blog posts.
-GET /posts/{id}: Get a specific blog post by ID.
-PUT /posts/{id}: Update a specific blog post by ID.
-DELETE /posts/{id}: Delete a specific blog post by ID.
-You can interact with these endpoints through Swagger UI at http://localhost:8080/swagger.
+GET /api/v1/blog-post: Get all blog posts.
+POST /api/v1/blog-post: Create a new blog post.
+GET /api/v1/blog-post/{id}: Get a specific blog post by ID.
+DELETE /api/v1/blog-post/{id}: Delete a blog post by ID.
+PATCH /api/v1/blog-post/{id}: Update a blog post by ID.
+You can interact with these endpoints through Swagger UI at https://blog-crud-dmua.onrender.com/swagger/index.html#/.
 
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -87,9 +67,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
    - Step-by-step guide to clone, set up, and run the app locally.
 2. **Database Configuration**:
    - Steps to set up PostgreSQL and configure the `.env` file.
-3. **Docker Setup**:
-   - Optional Docker setup for running the application in a container.
-4. **Testing the API**:
+3. **Testing the API**:
    - Basic guide on interacting with the API using Swagger UI.
   
 Make sure to replace the placeholder in the repository URL (`https://github.com/your-username/crud-app.git`) with your actual GitHub username or repository link.
