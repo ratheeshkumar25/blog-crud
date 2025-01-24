@@ -9,7 +9,17 @@ type Config struct {
 func LoadConfig() *Config {
 	var config Config
 	viper.SetConfigFile(".env")
-	viper.ReadInConfig()
-	viper.Unmarshal(&config)
+	_ = viper.ReadInConfig()
+
+	viper.AutomaticEnv()
+
+	if err := viper.Unmarshal(&config); err != nil {
+		panic("Failed to unmarshal config: " + err.Error())
+	}
+
+	// var config Config
+	// viper.SetConfigFile(".env")
+	// viper.ReadInConfig()
+	// viper.Unmarshal(&config)
 	return &config
 }
