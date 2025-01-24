@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ratheeshkumar25/blog-crud-api/config"
@@ -11,21 +10,13 @@ import (
 )
 
 func ConnectDB(config *config.Config) *gorm.DB {
-	host := config.Host
-	user := config.User
-	password := config.Password
-	dbname := config.Database
-	port := config.Port
-	sslmode := config.Sslmode
+	if config.Database_url == "" {
+		log.Fatal("Database URL is not set in the configuration")
+	}
+	// Log the connection details
+	log.Printf("Connecting to DB with URL: %s", config.Database_url)
 
-	// Print each configuration for debugging
-	log.Printf("Connecting to DB: host=%s, user=%s, password=%s, dbname=%s, port=%s, sslmode=%s\n", host, user, password, dbname, port, sslmode)
-
-	// Construct the DSN correctly
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s", host, user, password, dbname, port, sslmode)
-	log.Println("DSN:", dsn)
-
-	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err := gorm.Open(postgres.Open(config.Database_url), &gorm.Config{})
 	if err != nil {
 		log.Fatal("connection to the database failed:", err)
 	}

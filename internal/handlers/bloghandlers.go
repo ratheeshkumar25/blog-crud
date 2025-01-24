@@ -35,12 +35,19 @@ func NewBlogHandler(router fiber.Router, svc inter.BlogServiceInter) {
 func (h *BlogHandler) Create(c *fiber.Ctx) error {
 	blog := new(model.BlogPost)
 	if err := c.BodyParser(blog); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]string{
+			"error": "Invalid request body",
+		})
 	}
 	if err := h.SVC.Create(blog); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]string{
+			"error": "Failed to create blog post",
+		})
 	}
-	return c.Status(fiber.StatusCreated).JSON(blog)
+	return c.Status(fiber.StatusCreated).JSON(map[string]interface{}{
+		"message": "Blog post created successfully",
+		"data":    blog,
+	})
 }
 
 // GetAll retrieves all blog posts.
@@ -55,9 +62,14 @@ func (h *BlogHandler) Create(c *fiber.Ctx) error {
 func (h *BlogHandler) GetAll(c *fiber.Ctx) error {
 	blogs, err := h.SVC.GetAll()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]string{
+			"error": "Failed to retrieve blog posts",
+		})
 	}
-	return c.JSON(blogs)
+	return c.JSON(map[string]interface{}{
+		"message": "Blog posts retrieved successfully",
+		"data":    blogs,
+	})
 }
 
 // GetByID retrieves a blog post by ID.
@@ -72,12 +84,22 @@ func (h *BlogHandler) GetAll(c *fiber.Ctx) error {
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /api/v1/blog-post/{id} [get]
 func (h *BlogHandler) GetByID(c *fiber.Ctx) error {
-	id, _ := strconv.Atoi(c.Params("id"))
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]string{
+			"error": "Invalid blog post ID",
+		})
+	}
 	blog, err := h.SVC.GetByID(uint(id))
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(err.Error())
+		return c.Status(fiber.StatusNotFound).JSON(map[string]string{
+			"error": "Blog post not found",
+		})
 	}
-	return c.JSON(blog)
+	return c.JSON(map[string]interface{}{
+		"message": "Blog post retrieved successfully",
+		"data":    blog,
+	})
 }
 
 // Update updates a blog post by ID.
@@ -93,16 +115,36 @@ func (h *BlogHandler) GetByID(c *fiber.Ctx) error {
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /api/v1/blog-post/{id} [patch]
 func (h *BlogHandler) Update(c *fiber.Ctx) error {
-	id, _ := strconv.Atoi(c.Params("id"))
+	// Parse ID from the path
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]string{
+			"error": "Invalid blog post ID",
+		})
+	}
+
+	// Parse the request body
 	blog := new(model.BlogPost)
 	if err := c.BodyParser(blog); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]string{
+			"error": "Invalid request body",
+		})
 	}
+	// Set the blog post ID
 	blog.ID = uint(id)
+
+	// Attempt to update the blog post
 	if err := h.SVC.Update(blog); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]string{
+			"error": "Failed to update the blog post",
+		})
 	}
-	return c.JSON(blog)
+
+	// Return the updated blog post and success message
+	return c.Status(fiber.StatusOK).JSON(map[string]interface{}{
+		"message": "Blog post updated successfully",
+		"data":    blog,
+	})
 }
 
 // Delete deletes a blog post by ID.
@@ -116,9 +158,24 @@ func (h *BlogHandler) Update(c *fiber.Ctx) error {
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /api/v1/blog-post/{id} [delete]
 func (h *BlogHandler) Delete(c *fiber.Ctx) error {
-	id, _ := strconv.Atoi(c.Params("id"))
-	if err := h.SVC.Delete(uint(id)); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(err.Error())
+	// Parse ID from the path
+	id, err := strconv.Atoi(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(map[string]string{
+			"error": "Invalid blog post ID",
+		})
 	}
-	return c.SendStatus(fiber.StatusNoContent)
+
+	// attempt to delete the blog post
+	if err := h.SVC.Delete(uint(id)); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(map[string]string{
+			"error": "Failed to delete the blog post",
+		})
+	}
+
+	// Return success message
+	return c.Status(fiber.StatusOK).JSON(map[string]string{
+		"message": "Blog post deleted successfully",
+	})
+
 }
