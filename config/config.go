@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"log"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	Database_url string `mapstructure:"DATABASE_URL"`
@@ -8,18 +12,18 @@ type Config struct {
 
 func LoadConfig() *Config {
 	var config Config
-	viper.SetConfigFile(".env")
-	_ = viper.ReadInConfig()
 
 	viper.AutomaticEnv()
 
-	if err := viper.Unmarshal(&config); err != nil {
-		panic("Failed to unmarshal config: " + err.Error())
+	viper.SetConfigFile(".env")
+	err := viper.ReadInConfig()
+	if err != nil {
+		log.Println("No .env file found. Using environment variables.")
 	}
 
-	// var config Config
-	// viper.SetConfigFile(".env")
-	// viper.ReadInConfig()
-	// viper.Unmarshal(&config)
+	err = viper.Unmarshal(&config)
+	if err != nil {
+		log.Fatalf("Error unmarshalling config: %v", err)
+	}
 	return &config
 }

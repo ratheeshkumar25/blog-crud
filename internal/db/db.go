@@ -11,6 +11,8 @@ import (
 )
 
 func ConnectDB(config *config.Config) *gorm.DB {
+	log.Printf("Database URL from config: %s", config.Database_url)
+
 	if config.Database_url == "" {
 		log.Fatal("Database URL is not set in the configuration")
 	}
